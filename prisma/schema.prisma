@@ -10,43 +10,94 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  USER
+  ADMIN
+  MODERATOR
+}
 
-// model GeneralUser {
-//   userId            Int   @id @default(autoincrement())
-//   dateOfBirth       DateTime
-//   gender            Gender
-//   weight            Int
-//   height            Int
-//   activityType      String?
-//   exerciseType      String?
-//   mealPreferences   String?
-//   medicalConditions String?
-//   startingDate      DateTime
-//   notificaionDay    DateTime
-//   account Account?
-// }
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+model GeneralUser {
+  id                Int         @id @unique @default(autoincrement())
+  dateOfBirth       DateTime?
+  gender            Gender?
+  weight            Int?
+  height            Int?
+  activityTime      String      @db.VarChar(255)
+  goalType          String      @db.VarChar(255)
+  dietGoal          String      @db.VarChar(255)
+  medicalConditions String      @db.VarChar(255)
+  startingDate      DateTime?
+  preferedTime      DateTime?
+  account           Account?
+  mealPlan          MealPlan?
+  foodPreference    FoodPreference?
+  userGoal          UserGoal?
+}
 
 model Account {
-  accountId   Int         @id @default(autoincrement())
-  // user        GeneralUser @relation(fields: [activityNo], references: [userId])
-  // activityNo  Int         @unique
-  userType    Role        @default(MODERATOR)
-  firstName  String?      @db.VarChar(255)
-  lastName   String?      @db.VarChar(255)
+  accountId   Int         @id @unique @default(autoincrement())
+  accountNo   Int         @unique
+  user        GeneralUser @relation(fields: [accountNo], references: [id])
+  userType    Role        @default(USER)
+  firstName   String      @db.VarChar(255)
+  lastName    String      @db.VarChar(255)
   username    String      @unique
   email       String      @unique   @db.VarChar(255)
   password    String      @db.VarChar(255)
   
 }
 
-enum Role {
-  // USER
-  ADMIN
-  MODERATOR
+model Moderator {
+  moderatorId Int         @id @unique @default(autoincrement())
+  telephoneNo String      @db.VarChar(255)
+  isActive    Boolean     @default(true)
 }
 
-// enum Gender {
-//   MALE
-//   FEMALE
-//   OTHER
-// }
+model UserGoal {
+  goalId      Int         @id @unique @default(autoincrement())
+  accountNo   Int         @unique
+  user        GeneralUser @relation(fields: [accountNo], references: [id])
+  startDate   DateTime?
+  startWeight Int?
+  endDate     DateTime?
+  endWeight   Int?
+  state       Int?
+} 
+
+model MealPlan {
+  mealId    Int         @id @unique @default(autoincrement())
+  userId    Int      @unique
+  user      GeneralUser @relation(fields: [userId], references: [id])
+  breakfast String      @db.VarChar(255)
+  lunch     String      @db.VarChar(255)
+  dinner    String      @db.VarChar(255)
+
+}
+
+model FoodItem {
+  id              Int         @id @unique @default(autoincrement())
+  name            String      @db.VarChar(255)
+  calory          Int?
+  carbs           Int?
+  fat             Int?
+  protein         Int?
+  state           Int?
+  foodImage       Bytes?
+  foodPreference  FoodPreference?
+}
+
+model FoodPreference {
+  preferenceId  Int         @id @unique @default(autoincrement())
+  userId        Int         @unique
+  user          GeneralUser @relation(fields: [userId], references: [id])
+  foodId        Int         @unique
+  foodItem      FoodItem    @relation(fields: [foodId], references: [id])
+  liked         Int? 
+}
+
