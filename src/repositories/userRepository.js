@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 async function getUser(email) {
   try {
-    const user = await prisma.account.findUnique({
+    const user = await prisma.moderator.findUnique({
       where: { email: email },
     });
     return user;
@@ -13,4 +13,14 @@ async function getUser(email) {
   }
 }
 
-module.exports = { getUser };
+async function registerUser(data) {
+  try {
+    const user = await prisma.moderator.create({ data: { ...data } });
+    delete user["password"];
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
+module.exports = { getUser, registerUser };

@@ -2,7 +2,10 @@ const bcrypt = require("bcrypt");
 const generateOutput = require("../helpers/generateOutput");
 const userRepository = require("../repositories/userRepository");
 const { generateAccessToken } = require("../helpers/accessToken");
-const { userLogInSchema } = require("../validationSchemas/userSchema");
+const {
+  userLogInSchema,
+  userRegisterSchema,
+} = require("../validationSchemas/userSchema");
 
 async function signInUser(data) {
   if (!data) {
@@ -41,4 +44,37 @@ async function signInUser(data) {
   }
 }
 
-module.exports = { signInUser };
+async function registerUser(data) {
+  try {
+    await userRegisterSchema.validateAsync({ ...data });
+  } catch (error) {
+    return generateOutput(401, "Validation error!");
+  }
+  return new Promise(async (resolve, reject) => {
+    bcrypt.hash(data.password, 10, async function (err, hash) {
+      if (err) {
+        resolve(generateOutput(400, "Server error!"));
+      }
+      try {
+        const user = await userRepository.registerUser({
+          ...data,
+          password: hash,
+        });
+        console.log(user);
+        resolve(
+          generateOutput(201, {
+            user,
+            token: generateAccessToken({
+              id: user.moderatorId,
+              email: user.email,
+            }),
+          })
+        );
+      } catch (error) {
+        resolve(generateOutput(500, "Error in creating user"));
+      }
+    });
+  });
+}
+
+module.exports = { signInUser, registerUser };
