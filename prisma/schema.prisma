@@ -55,8 +55,15 @@ model Account {
 
 model Moderator {
   moderatorId Int         @id @unique @default(autoincrement())
-  telephoneNo String      @db.VarChar(255)
+  createdAt   DateTime    @default(now())
+  firstName   String      @db.VarChar(255)
+  lastName    String      @db.VarChar(255)
+  email       String      @unique   @db.VarChar(255)
+  username    String      @unique
+  password    String      @db.VarChar(255)
+  telephoneNo String      @db.VarChar(10)
   isActive    Boolean     @default(true)
+  isFirstTime Boolean     @default(true)
 }
 
 model UserGoal {
