@@ -23,4 +23,23 @@ async function registerUser(data) {
   }
 }
 
-module.exports = { getUser, registerUser };
+async function getAllUsers() {
+  try {
+    const allUsers = await prisma.moderator.findMany();
+    return allUsers;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function removeUser(email) {
+  try {
+    const user = await prisma.moderator.delete({
+      where: { email: email },
+    });
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+module.exports = { getUser, registerUser, getAllUsers, removeUser };

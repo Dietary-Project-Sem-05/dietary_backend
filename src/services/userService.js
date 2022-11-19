@@ -6,6 +6,7 @@ const {
   userLogInSchema,
   userRegisterSchema,
 } = require("../validationSchemas/userSchema");
+const { func } = require("joi");
 
 async function signInUser(data) {
   if (!data) {
@@ -77,4 +78,25 @@ async function registerUser(data) {
   });
 }
 
-module.exports = { signInUser, registerUser };
+async function getUsers() {
+  try {
+    const allUsers = await userRepository.getAllUsers();
+    return generateOutput(200, allUsers);
+  } catch (error) {
+    return generateOutput(500, "Error in getting Users");
+  }
+}
+
+async function removeUser(email) {
+  if (!email) {
+    return generateOutput(400, "Invalid request");
+  }
+  try {
+    const user = await userRepository.removeUser(email);
+    return generateOutput(200, user);
+  } catch (error) {
+    return generateOutput(500, "Error in removing user");
+  }
+}
+
+module.exports = { signInUser, registerUser, getUsers, removeUser };
