@@ -18,7 +18,18 @@ router.post("/login", async (req, res) => {
 
 router.post("/admin/add-moderator", async (req, res) => {
   const result = await userService.registerUser(req.body);
-  console.log(result);
+  res.status(200);
+  res.send(result);
+});
+
+router.get("/admin/mod-info", async (req, res) => {
+  const result = await userService.getUsers(req.body);
+  res.status(200);
+  res.send(result);
+});
+
+router.delete("/admin/mod-info", async (req, res) => {
+  const result = await userService.removeUser(req.body.email);
   res.status(200);
   res.send(result);
 });

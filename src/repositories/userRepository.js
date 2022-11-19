@@ -17,16 +17,24 @@ async function registerUser(data) {
   try {
     const user = await prisma.moderator.create({ data: { ...data } });
     delete user["password"];
-    console.log(user);
     return user;
   } catch (error) {
     throw error;
   }
 }
 
-async function getAllUser(data) {
+async function getAllUsers() {
   try {
-    const user = await prisma.moderator.findMany({
+    const allUsers = await prisma.moderator.findMany();
+    return allUsers;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function removeUser(email) {
+  try {
+    const user = await prisma.moderator.delete({
       where: { email: email },
     });
     return user;
@@ -34,5 +42,4 @@ async function getAllUser(data) {
     throw error;
   }
 }
-
-module.exports = { getUser, registerUser };
+module.exports = { getUser, registerUser, getAllUsers, removeUser };
