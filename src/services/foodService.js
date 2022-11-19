@@ -10,4 +10,13 @@ async function getFoods() {
   }
 }
 
-module.exports = { getFoods };
+async function updateNewState(id, state) {
+  try {
+    const updatedFood = await foodRepository.updateState(id, state);
+    return generateOutput(200, updatedFood);
+  } catch (error) {
+    return generateOutput(500, "Error in updating food");
+  }
+}
+
+module.exports = { getFoods, updateNewState };

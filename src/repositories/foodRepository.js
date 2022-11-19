@@ -11,4 +11,20 @@ async function getAllFoods() {
   }
 }
 
-module.exports = { getAllFoods };
+async function updateState(id, state) {
+  try {
+    const updateFood = await prisma.foodItem.update({
+      where: {
+        id: id,
+      },
+      data: {
+        state: state,
+      },
+    });
+    return updateFood;
+  } catch (error) {
+    throw error;
+  }
+}
+
+module.exports = { getAllFoods, updateState };
