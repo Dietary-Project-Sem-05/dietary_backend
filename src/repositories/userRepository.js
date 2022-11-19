@@ -17,6 +17,18 @@ async function registerUser(data) {
   try {
     const user = await prisma.moderator.create({ data: { ...data } });
     delete user["password"];
+    console.log(user);
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getAllUser(data) {
+  try {
+    const user = await prisma.moderator.findMany({
+      where: { email: email },
+    });
     return user;
   } catch (error) {
     throw error;

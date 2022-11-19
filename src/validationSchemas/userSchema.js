@@ -21,7 +21,7 @@ const userRegisterSchema = Joi.object({
   email: Joi.string().email().max(255).required(),
   telephoneNo: Joi.string().required().min(10).max(10),
   username: Joi.string().required().min(3).max(255),
-  role: Joi.string().required(),
+  role: Joi.string(),
   password: Joi.string()
     .regex(/\d+/, "Password should contain at least one number")
     .regex(/[a-z]+/, "Password should contain at least one lowercase character")

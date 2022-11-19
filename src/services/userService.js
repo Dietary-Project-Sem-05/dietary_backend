@@ -45,6 +45,7 @@ async function signInUser(data) {
 }
 
 async function registerUser(data) {
+  console.log(data);
   try {
     await userRegisterSchema.validateAsync({ ...data });
   } catch (error) {
