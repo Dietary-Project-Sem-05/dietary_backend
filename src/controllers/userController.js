@@ -16,7 +16,7 @@ router.post("/login", async (req, res) => {
   res.send(result);
 });
 
-router.post("/register", async (req, res) => {
+router.post("/admin/add-moderator", async (req, res) => {
   const result = await userService.registerUser(req.body);
   res.status(200);
   res.send(result);
