@@ -10,6 +10,7 @@ const cors = require("cors");
 const app = express();
 
 const userController = require("./src/controllers/userController");
+const foodController = require("./src/controllers/foodController");
 
 app.use(cors());
 app.use(logger("dev"));
@@ -18,6 +19,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use("/api/user", userController);
+app.use("/api/food", foodController);
 
 app.get("/", (req, res) => {
   res.status(200).send("Server is working");
