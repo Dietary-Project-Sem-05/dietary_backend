@@ -64,6 +64,7 @@ model Moderator {
   telephoneNo String      @db.VarChar(10)
   isActive    Boolean     @default(true)
   isFirstTime Boolean     @default(true)
+  role        Role        @default(MODERATOR)
 }
 
 model UserGoal {
