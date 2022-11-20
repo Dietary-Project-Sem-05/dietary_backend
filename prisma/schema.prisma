@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,43 +7,96 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
-// model GeneralUser {
-//   userId            Int   @id @default(autoincrement())
-//   dateOfBirth       DateTime
-//   gender            Gender
-//   weight            Int
-//   height            Int
-//   activityType      String?
-//   exerciseType      String?
-//   mealPreferences   String?
-//   medicalConditions String?
-//   startingDate      DateTime
-//   notificaionDay    DateTime
-//   account Account?
-// }
+model GeneralUser {
+  id                Int             @id @unique @default(autoincrement())
+  dateOfBirth       DateTime?
+  gender            Gender?
+  weight            Int?
+  height            Int?
+  activityTime      String?         @db.VarChar(255)
+  goalType          String?         @db.VarChar(255)
+  dietGoal          String?         @db.VarChar(255)
+  medicalConditions String?         @db.VarChar(255)
+  startingDate      DateTime?
+  preferedTime      DateTime?
+  account           Account?
+  foodPreference    FoodPreference?
+  mealPlan          MealPlan?
+  userGoal          UserGoal?
+}
 
 model Account {
-  accountId   Int         @id @default(autoincrement())
-  // user        GeneralUser @relation(fields: [activityNo], references: [userId])
-  // activityNo  Int         @unique
-  userType    Role        @default(MODERATOR)
-  firstName  String?      @db.VarChar(255)
-  lastName   String?      @db.VarChar(255)
-  username    String      @unique
-  email       String      @unique   @db.VarChar(255)
-  password    String      @db.VarChar(255)
-  
+  accountId Int          @id @unique @default(autoincrement())
+  accountNo Int?         @unique
+  userType  Role?        @default(USER)
+  firstName String?      @db.VarChar(255)
+  lastName  String?      @db.VarChar(255)
+  username  String?      @unique
+  email     String?      @unique @db.VarChar(255)
+  password  String?      @db.VarChar(255)
+  user      GeneralUser? @relation(fields: [accountNo], references: [id], onDelete: Restrict)
+}
+
+model Moderator {
+  moderatorId Int      @id @unique @default(autoincrement())
+  telephoneNo String   @db.VarChar(10)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  email       String   @unique @db.VarChar(255)
+  firstName   String   @db.VarChar(255)
+  isFirstTime Boolean  @default(true)
+  lastName    String   @db.VarChar(255)
+  password    String   @db.VarChar(255)
+  username    String   @unique
+  role        Role     @default(MODERATOR)
+}
+
+model UserGoal {
+  goalId      Int         @id @unique @default(autoincrement())
+  accountNo   Int         @unique
+  startDate   DateTime?
+  startWeight Int?
+  endDate     DateTime?
+  endWeight   Int?
+  state       Int?
+  user        GeneralUser @relation(fields: [accountNo], references: [id])
+}
+
+model MealPlan {
+  mealId    Int         @id @unique @default(autoincrement())
+  userId    Int         @unique
+  breakfast String      @db.VarChar(255)
+  lunch     String      @db.VarChar(255)
+  dinner    String      @db.VarChar(255)
+  user      GeneralUser @relation(fields: [userId], references: [id])
+}
+
+model FoodItem {
+  id             Int             @id @unique @default(autoincrement())
+  name           String?         @db.VarChar(100)
+  calory         Int?
+  state          Int?
+  foodCategory   String?         @db.VarChar(20)
+  foodPreference FoodPreference?
+}
+
+model FoodPreference {
+  preferenceId Int         @id @unique @default(autoincrement())
+  userId       Int         @unique
+  foodId       Int         @unique
+  liked        Int?
+  foodItem     FoodItem    @relation(fields: [foodId], references: [id])
+  user         GeneralUser @relation(fields: [userId], references: [id])
 }
 
 enum Role {
-  // USER
+  USER
   ADMIN
   MODERATOR
 }
 
-// enum Gender {
-//   MALE
-//   FEMALE
-//   OTHER
-// }
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
