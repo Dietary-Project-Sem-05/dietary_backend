@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const generateOutput = require("./generateOutput");
 
-function generateAccessToken(date) {
+function generateAccessToken(data) {
   return jwt.sign(data, process.env.TOKEN_SECRET, {
     expiresIn: process.env.TOKEN_EXPIRE_TIME,
   });
@@ -12,7 +12,7 @@ function authenticateToken(req, res, next) {
   const token = authHeader && authHeader.split(" ")[1];
   if (token == null) return res.sendStatus(401);
 
-  innerWidth.verify(token, process.env.TOKEN_SECRET, (err, user) => {
+  jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
     if (err) {
       res.status(403);
       res.send(generateOutput(403, "Unauthorized"));
