@@ -99,4 +99,19 @@ async function removeUser(email) {
   }
 }
 
-module.exports = { signInUser, registerUser, getUsers, removeUser };
+async function updateUserActive(email, isActive) {
+  try {
+    const updatedUser = await userRepository.updateIsActive(email, isActive);
+    return generateOutput(200, updatedUser);
+  } catch (error) {
+    return generateOutput(500, "Error in updating user");
+  }
+}
+
+module.exports = {
+  signInUser,
+  registerUser,
+  getUsers,
+  removeUser,
+  updateUserActive,
+};

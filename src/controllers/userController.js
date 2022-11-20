@@ -34,4 +34,13 @@ router.delete("/admin/mod-info", async (req, res) => {
   res.send(result);
 });
 
+router.post("/admin/mod-info", async (req, res) => {
+  const result = await userService.updateUserActive(
+    req.body.email,
+    req.body.isActive
+  );
+  res.status(200);
+  res.send(result);
+});
+
 module.exports = router;
