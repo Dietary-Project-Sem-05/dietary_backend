@@ -42,4 +42,23 @@ async function removeUser(email) {
     throw error;
   }
 }
-module.exports = { getUser, registerUser, getAllUsers, removeUser };
+
+async function updateIsActive(email, isActive) {
+  try {
+    const updateUser = await prisma.moderator.update({
+      where: { email: email },
+      data: { isActive: isActive },
+    });
+    return updateUser;
+  } catch (error) {
+    throw error;
+  }
+}
+
+module.exports = {
+  getUser,
+  registerUser,
+  getAllUsers,
+  removeUser,
+  updateIsActive,
+};
