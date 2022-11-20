@@ -10,4 +10,4 @@ It is a mobile diet consultant application wich offer a broader approach to givi
 - Clone the repository 
 - Create a .env file at the root of the project
 - Execute the `npm i` command
-- Finally execute the `node app.js` command
+- Finally execute the `npm start` command
